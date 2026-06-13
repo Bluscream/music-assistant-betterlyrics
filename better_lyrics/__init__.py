@@ -110,9 +110,18 @@ class BetterLyricsProvider(MetadataProvider):
 
         # Exclude instrumentals if configured
         exclude_instrumental = self.config.get_value(CONF_EXCLUDE_INSTRUMENTAL, True)
-        if exclude_instrumental and track.metadata and track.metadata.instrumental:
-            self.logger.debug("Skipping BetterLyrics lookup: track is marked as instrumental.")
-            return None
+        if exclude_instrumental:
+            is_instrumental = False
+            if track.metadata and track.metadata.genres:
+                is_instrumental = any("instrumental" in g.lower() for g in track.metadata.genres)
+            if not is_instrumental and getattr(track, "version", None):
+                is_instrumental = "instrumental" in track.version.lower()
+            if not is_instrumental and track.name:
+                is_instrumental = "instrumental" in track.name.lower()
+            
+            if is_instrumental:
+                self.logger.debug("Skipping BetterLyrics lookup: track is marked or named as instrumental.")
+                return None
 
         api_url = self.config.get_value(CONF_API_URL, "https://lyrics-api.boidu.dev/getLyrics")
         params = {
