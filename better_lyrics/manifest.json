@@ -1,0 +1,12 @@
+{
+  "type": "metadata",
+  "domain": "better_lyrics",
+  "stage": "stable",
+  "name": "BetterLyrics",
+  "description": "Fetches track lyrics from BetterLyrics API and parses TTML to LRC.",
+  "codeowners": ["@bluscream"],
+  "requirements": [],
+  "multi_instance": false,
+  "allow_disable": true,
+  "icon": "mdi-music-clef-treble"
+}
